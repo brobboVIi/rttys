@@ -124,6 +124,9 @@ func (dev *device) DeviceID() string {
 }
 
 func (dev *device) WriteMsg(typ int, data []byte) {
+	if atomic.LoadUint32(&dev.closed) == 1 {
+		return
+	}
 	b := []byte{byte(typ), 0, 0}
 
 	binary.BigEndian.PutUint16(b[1:], uint16(len(data)))
