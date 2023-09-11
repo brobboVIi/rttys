@@ -122,7 +122,7 @@ func getLoginUsername(c *gin.Context) string {
 func apiStart(br *broker) {
 	cfg := br.cfg
 
-	httpSessions = cache.New(30*time.Minute, 5*time.Second)
+	httpSessions = cache.New(60*time.Minute, 5*time.Second)
 
 	gin.SetMode(gin.ReleaseMode)
 
@@ -246,7 +246,7 @@ func apiStart(br *broker) {
 
 		devs := make([]DeviceInfo, 0)
 
-		rows, err := db.Query(sql)
+		rows, err := db.Query(sql + " order by online desc limit 30")
 		if err != nil {
 			log.Error().Msg(err.Error())
 			c.Status(http.StatusInternalServerError)
